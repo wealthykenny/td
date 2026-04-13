@@ -2,851 +2,911 @@
 
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AEONICS — Imagery Refined</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --aurora-1: #00ffe5;
-    --aurora-2: #7b2fff;
-    --aurora-3: #ff2fd4;
-    --aurora-4: #00ff85;
-    --aurora-5: #ffe500;
-    --dark: #020408;
-    --dark2: #080d14;
-    --grid-color: rgba(0,255,229,0.07);
-    --scanline: rgba(0,255,229,0.03);
-    --text-main: #e8f4ff;
-    --text-dim: rgba(232,244,255,0.5);
-    --glow-cyan: 0 0 20px rgba(0,255,229,0.5), 0 0 60px rgba(0,255,229,0.15);
-    --glow-purple: 0 0 20px rgba(123,47,255,0.6), 0 0 60px rgba(123,47,255,0.2);
-    --glow-pink: 0 0 20px rgba(255,47,212,0.5), 0 0 60px rgba(255,47,212,0.15);
-  }
-
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-background: var(–dark);
-color: var(–text-main);
-font-family: ‘Rajdhani’, sans-serif;
-overflow-x: hidden;
-cursor: crosshair;
-}
-
-/* ── SCANLINES ── */
-body::after {
-content: ‘’;
-position: fixed;
-inset: 0;
-background: repeating-linear-gradient(
-0deg,
-var(–scanline) 0px,
-var(–scanline) 1px,
-transparent 1px,
-transparent 3px
-);
-pointer-events: none;
-z-index: 9999;
-}
-
-/* ── AURORA BG ── */
-.aurora-bg {
-position: fixed;
-inset: 0;
-z-index: 0;
-overflow: hidden;
-}
-
-.aurora-blob {
-position: absolute;
-border-radius: 50%;
-filter: blur(90px);
-opacity: 0.18;
-animation: drift linear infinite;
-}
-
-.aurora-blob:nth-child(1) {
-width: 700px; height: 700px;
-background: radial-gradient(circle, var(–aurora-2), transparent 70%);
-top: -200px; left: -100px;
-animation-duration: 22s;
-}
-.aurora-blob:nth-child(2) {
-width: 600px; height: 600px;
-background: radial-gradient(circle, var(–aurora-1), transparent 70%);
-top: 30%; right: -150px;
-animation-duration: 18s;
-animation-delay: -5s;
-}
-.aurora-blob:nth-child(3) {
-width: 500px; height: 500px;
-background: radial-gradient(circle, var(–aurora-3), transparent 70%);
-bottom: -100px; left: 30%;
-animation-duration: 25s;
-animation-delay: -10s;
-}
-.aurora-blob:nth-child(4) {
-width: 400px; height: 400px;
-background: radial-gradient(circle, var(–aurora-4), transparent 70%);
-top: 60%; left: -80px;
-animation-duration: 20s;
-animation-delay: -3s;
-}
-
-@keyframes drift {
-0%   { transform: translate(0, 0) scale(1); }
-33%  { transform: translate(60px, -80px) scale(1.1); }
-66%  { transform: translate(-40px, 60px) scale(0.95); }
-100% { transform: translate(0, 0) scale(1); }
-}
-
-/* ── GRID OVERLAY ── */
-.grid-overlay {
-position: fixed;
-inset: 0;
-z-index: 1;
-background-image:
-linear-gradient(var(–grid-color) 1px, transparent 1px),
-linear-gradient(90deg, var(–grid-color) 1px, transparent 1px);
-background-size: 48px 48px;
-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-pointer-events: none;
-}
-
-/* ── CONTENT ── */
-.content {
-position: relative;
-z-index: 10;
-}
-
-/* ── NAV ── */
-nav {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 24px 48px;
-border-bottom: 1px solid rgba(0,255,229,0.1);
-backdrop-filter: blur(8px);
-background: rgba(2,4,8,0.5);
-position: sticky;
-top: 0;
-z-index: 100;
-}
-
-.logo {
-font-family: ‘Orbitron’, monospace;
-font-weight: 900;
-font-size: 1.4rem;
-letter-spacing: 0.2em;
-color: var(–aurora-1);
-text-shadow: var(–glow-cyan);
-text-decoration: none;
-position: relative;
-}
-.logo span {
-color: var(–aurora-3);
-text-shadow: var(–glow-pink);
-}
-
-.nav-badge {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.25em;
-color: var(–aurora-5);
-border: 1px solid rgba(255,229,0,0.4);
-padding: 4px 12px;
-text-transform: uppercase;
-background: rgba(255,229,0,0.05);
-animation: badge-pulse 3s ease-in-out infinite;
-}
-
-@keyframes badge-pulse {
-0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(255,229,0,0.3); }
-50% { opacity: 0.6; box-shadow: 0 0 0px transparent; }
-}
-
-/* ── HERO ── */
-.hero {
-min-height: 92vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-text-align: center;
-padding: 60px 24px 40px;
-position: relative;
-}
-
-.hero-eyebrow {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.7rem;
-letter-spacing: 0.4em;
-color: var(–aurora-1);
-text-transform: uppercase;
-margin-bottom: 28px;
-opacity: 0;
-animation: fadeUp 0.8s ease forwards 0.2s;
-}
-
-.hero-title {
-font-family: ‘Orbitron’, monospace;
-font-size: clamp(3rem, 10vw, 7.5rem);
-font-weight: 900;
-line-height: 0.9;
-letter-spacing: -0.02em;
-margin-bottom: 0;
-opacity: 0;
-animation: fadeUp 0.8s ease forwards 0.4s;
-}
-
-.hero-title .line1 {
-display: block;
-color: var(–text-main);
-text-shadow: 0 0 40px rgba(232,244,255,0.15);
-}
-.hero-title .line2 {
-display: block;
-background: linear-gradient(90deg, var(–aurora-1), var(–aurora-2), var(–aurora-3));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-filter: drop-shadow(0 0 30px rgba(123,47,255,0.4));
-animation: hue-shift 6s linear infinite;
-}
-
-@keyframes hue-shift {
-0% { filter: drop-shadow(0 0 30px rgba(0,255,229,0.4)) hue-rotate(0deg); }
-50% { filter: drop-shadow(0 0 50px rgba(255,47,212,0.5)) hue-rotate(30deg); }
-100% { filter: drop-shadow(0 0 30px rgba(0,255,229,0.4)) hue-rotate(0deg); }
-}
-
-.hero-sub {
-font-family: ‘Rajdhani’, sans-serif;
-font-size: clamp(1rem, 2.5vw, 1.35rem);
-font-weight: 300;
-color: var(–text-dim);
-max-width: 600px;
-line-height: 1.7;
-margin-top: 32px;
-letter-spacing: 0.03em;
-opacity: 0;
-animation: fadeUp 0.8s ease forwards 0.6s;
-}
-
-/* ── EMAIL FORM ── */
-.email-section {
-margin-top: 48px;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 16px;
-opacity: 0;
-animation: fadeUp 0.8s ease forwards 0.8s;
-width: 100%;
-max-width: 480px;
-}
-
-.input-wrap {
-display: flex;
-width: 100%;
-border: 1px solid rgba(0,255,229,0.3);
-background: rgba(0,255,229,0.04);
-backdrop-filter: blur(8px);
-transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.input-wrap:focus-within {
-border-color: var(–aurora-1);
-box-shadow: var(–glow-cyan);
-}
-
-.email-input {
-flex: 1;
-background: transparent;
-border: none;
-outline: none;
-padding: 14px 20px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.85rem;
-color: var(–text-main);
-letter-spacing: 0.05em;
-}
-
-.email-input::placeholder { color: rgba(232,244,255,0.3); }
-
-.cta-btn {
-padding: 14px 28px;
-background: linear-gradient(135deg, var(–aurora-1), var(–aurora-2));
-border: none;
-font-family: ‘Orbitron’, monospace;
-font-size: 0.65rem;
-font-weight: 700;
-letter-spacing: 0.2em;
-color: #000;
-cursor: pointer;
-text-transform: uppercase;
-transition: filter 0.3s, transform 0.15s;
-white-space: nowrap;
-}
-
-.cta-btn:hover {
-filter: brightness(1.2) saturate(1.3);
-transform: scale(1.02);
-}
-
-.form-note {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.65rem;
-color: var(–text-dim);
-letter-spacing: 0.15em;
-}
-
-/* ── SCROLL INDICATOR ── */
-.scroll-hint {
-position: absolute;
-bottom: 32px;
-left: 50%;
-transform: translateX(-50%);
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 8px;
-opacity: 0;
-animation: fadeUp 0.8s ease forwards 1.4s;
-}
-
-.scroll-hint span {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.3em;
-color: var(–text-dim);
-}
-
-.scroll-line {
-width: 1px;
-height: 40px;
-background: linear-gradient(to bottom, var(–aurora-1), transparent);
-animation: scroll-drop 2s ease-in-out infinite;
-}
-
-@keyframes scroll-drop {
-0%, 100% { transform: scaleY(1); opacity: 1; }
-50% { transform: scaleY(0.4); opacity: 0.3; }
-}
-
-/* ── STATS BAR ── */
-.stats-bar {
-display: flex;
-justify-content: center;
-gap: 0;
-border-top: 1px solid rgba(0,255,229,0.1);
-border-bottom: 1px solid rgba(0,255,229,0.1);
-background: rgba(2,4,8,0.7);
-backdrop-filter: blur(8px);
-overflow: hidden;
-}
-
-.stat-item {
-flex: 1;
-padding: 28px 20px;
-text-align: center;
-border-right: 1px solid rgba(0,255,229,0.1);
-position: relative;
-transition: background 0.3s;
-max-width: 220px;
-}
-
-.stat-item:last-child { border-right: none; }
-.stat-item:hover { background: rgba(0,255,229,0.04); }
-
-.stat-val {
-font-family: ‘Orbitron’, monospace;
-font-size: clamp(1.4rem, 3vw, 2rem);
-font-weight: 900;
-color: var(–aurora-1);
-text-shadow: var(–glow-cyan);
-display: block;
-line-height: 1;
-}
-
-.stat-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.25em;
-color: var(–text-dim);
-text-transform: uppercase;
-margin-top: 6px;
-display: block;
-}
-
-/* ── FEATURES ── */
-.section {
-padding: 100px 48px;
-max-width: 1200px;
-margin: 0 auto;
-}
-
-.section-label {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.45em;
-color: var(–aurora-3);
-text-transform: uppercase;
-margin-bottom: 16px;
-display: flex;
-align-items: center;
-gap: 12px;
-}
-
-.section-label::before {
-content: ‘’;
-display: block;
-width: 32px;
-height: 1px;
-background: var(–aurora-3);
-box-shadow: 0 0 8px var(–aurora-3);
-}
-
-.section-title {
-font-family: ‘Orbitron’, monospace;
-font-size: clamp(1.6rem, 4vw, 2.8rem);
-font-weight: 700;
-line-height: 1.15;
-max-width: 600px;
-margin-bottom: 60px;
-}
-
-.features-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-gap: 1px;
-background: rgba(0,255,229,0.08);
-border: 1px solid rgba(0,255,229,0.08);
-}
-
-.feature-card {
-background: var(–dark2);
-padding: 36px 32px;
-position: relative;
-overflow: hidden;
-transition: background 0.4s;
-}
-
-.feature-card::before {
-content: ‘’;
-position: absolute;
-top: 0; left: 0;
-width: 100%; height: 2px;
-background: linear-gradient(90deg, transparent, var(–card-accent, var(–aurora-1)), transparent);
-transform: scaleX(0);
-transition: transform 0.4s;
-}
-
-.feature-card:hover::before { transform: scaleX(1); }
-.feature-card:hover { background: rgba(0,255,229,0.03); }
-
-.feature-card:nth-child(1) { –card-accent: var(–aurora-1); }
-.feature-card:nth-child(2) { –card-accent: var(–aurora-2); }
-.feature-card:nth-child(3) { –card-accent: var(–aurora-3); }
-.feature-card:nth-child(4) { –card-accent: var(–aurora-4); }
-.feature-card:nth-child(5) { –card-accent: var(–aurora-5); }
-.feature-card:nth-child(6) { –card-accent: var(–aurora-1); }
-
-.feature-icon {
-font-size: 1.6rem;
-margin-bottom: 20px;
-display: block;
-filter: drop-shadow(0 0 8px var(–card-accent, var(–aurora-1)));
-}
-
-.feature-title {
-font-family: ‘Orbitron’, monospace;
-font-size: 0.85rem;
-font-weight: 700;
-letter-spacing: 0.1em;
-color: var(–text-main);
-margin-bottom: 12px;
-text-transform: uppercase;
-}
-
-.feature-desc {
-font-size: 0.95rem;
-font-weight: 300;
-color: var(–text-dim);
-line-height: 1.7;
-letter-spacing: 0.02em;
-}
-
-/* ── MANIFESTO ── */
-.manifesto {
-padding: 100px 48px;
-position: relative;
-overflow: hidden;
-border-top: 1px solid rgba(0,255,229,0.08);
-border-bottom: 1px solid rgba(0,255,229,0.08);
-background: linear-gradient(180deg, rgba(123,47,255,0.05) 0%, transparent 100%);
-}
-
-.manifesto-inner {
-max-width: 900px;
-margin: 0 auto;
-text-align: center;
-}
-
-.manifesto-quote {
-font-family: ‘Orbitron’, monospace;
-font-size: clamp(1.2rem, 3.5vw, 2.2rem);
-font-weight: 400;
-line-height: 1.5;
-color: var(–text-main);
-letter-spacing: 0.04em;
-position: relative;
-}
-
-.manifesto-quote em {
-font-style: normal;
-background: linear-gradient(90deg, var(–aurora-1), var(–aurora-3));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
-
-.manifesto-divider {
-width: 80px;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–aurora-2), transparent);
-margin: 40px auto;
-}
-
-.manifesto-body {
-font-size: 1.05rem;
-font-weight: 300;
-color: var(–text-dim);
-line-height: 1.9;
-max-width: 680px;
-margin: 0 auto;
-letter-spacing: 0.02em;
-}
-
-/* ── PROCESS ── */
-.process-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-gap: 32px;
-margin-top: 60px;
-}
-
-.process-step {
-position: relative;
-padding: 28px 24px 28px 48px;
-border-left: 2px solid rgba(0,255,229,0.2);
-transition: border-color 0.3s;
-}
-
-.process-step:hover { border-color: var(–aurora-1); }
-
-.step-num {
-position: absolute;
-left: -14px;
-top: 24px;
-width: 26px;
-height: 26px;
-background: var(–dark);
-border: 1px solid var(–aurora-1);
-color: var(–aurora-1);
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.65rem;
-display: flex;
-align-items: center;
-justify-content: center;
-text-shadow: var(–glow-cyan);
-box-shadow: var(–glow-cyan);
-}
-
-.step-title {
-font-family: ‘Orbitron’, monospace;
-font-size: 0.75rem;
-font-weight: 700;
-letter-spacing: 0.12em;
-color: var(–text-main);
-text-transform: uppercase;
-margin-bottom: 8px;
-}
-
-.step-desc {
-font-size: 0.9rem;
-font-weight: 300;
-color: var(–text-dim);
-line-height: 1.7;
-}
-
-/* ── BOTTOM CTA ── */
-.bottom-cta {
-padding: 120px 24px;
-text-align: center;
-position: relative;
-}
-
-.bottom-cta-title {
-font-family: ‘Orbitron’, monospace;
-font-size: clamp(2rem, 6vw, 4.5rem);
-font-weight: 900;
-line-height: 1;
-margin-bottom: 24px;
-}
-
-.bottom-cta-title .accent {
-color: var(–aurora-1);
-text-shadow: var(–glow-cyan);
-}
-
-.counter-wrap {
-display: flex;
-justify-content: center;
-gap: 6px;
-margin: 40px auto 48px;
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.7rem;
-letter-spacing: 0.25em;
-color: var(–text-dim);
-align-items: center;
-}
-
-.counter-box {
-background: rgba(0,255,229,0.06);
-border: 1px solid rgba(0,255,229,0.2);
-padding: 10px 14px;
-font-size: 1.6rem;
-font-family: ‘Orbitron’, monospace;
-color: var(–aurora-1);
-text-shadow: var(–glow-cyan);
-min-width: 56px;
-text-align: center;
-line-height: 1;
-}
-
-.counter-sep {
-color: var(–aurora-3);
-font-size: 1.4rem;
-font-family: ‘Orbitron’, monospace;
-}
-
-.bottom-cta-sub {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.3em;
-color: var(–text-dim);
-text-transform: uppercase;
-margin-bottom: 48px;
-}
-
-/* ── FOOTER ── */
-footer {
-border-top: 1px solid rgba(0,255,229,0.1);
-padding: 32px 48px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-background: rgba(2,4,8,0.8);
-backdrop-filter: blur(8px);
-flex-wrap: wrap;
-gap: 16px;
-}
-
-.footer-logo {
-font-family: ‘Orbitron’, monospace;
-font-size: 0.9rem;
-font-weight: 900;
-color: var(–aurora-1);
-letter-spacing: 0.2em;
-text-shadow: var(–glow-cyan);
-}
-
-.footer-copy {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.2em;
-color: var(–text-dim);
-text-align: center;
-}
-
-.footer-links {
-display: flex;
-gap: 24px;
-}
-
-.footer-links a {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.2em;
-color: var(–text-dim);
-text-decoration: none;
-text-transform: uppercase;
-transition: color 0.2s;
-}
-
-.footer-links a:hover { color: var(–aurora-1); }
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(24px); }
-to   { opacity: 1; transform: translateY(0); }
-}
-
-.reveal {
-opacity: 0;
-transform: translateY(32px);
-transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.reveal.visible {
-opacity: 1;
-transform: translateY(0);
-}
-
-/* ── GLITCH on logo ── */
-.logo:hover::before,
-.logo:hover::after {
-content: ‘AEONICS’;
-position: absolute;
-top: 0; left: 0;
-color: var(–aurora-3);
-opacity: 0.7;
-}
-.logo:hover::before { animation: glitch-a 0.15s steps(2) infinite; clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); }
-.logo:hover::after  { animation: glitch-b 0.2s steps(2) infinite; clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); color: var(–aurora-1); }
-
-@keyframes glitch-a {
-0%   { transform: translate(-3px, 0); }
-100% { transform: translate(3px, 0); }
-}
-@keyframes glitch-b {
-0%   { transform: translate(2px, 0); }
-100% { transform: translate(-2px, 0); }
-}
-
-/* ── TICKER TAPE ── */
-.ticker {
-overflow: hidden;
-border-top: 1px solid rgba(0,255,229,0.12);
-border-bottom: 1px solid rgba(0,255,229,0.12);
-background: rgba(0,0,0,0.4);
-padding: 10px 0;
-white-space: nowrap;
-}
-
-.ticker-inner {
-display: inline-flex;
-gap: 0;
-animation: ticker-scroll 30s linear infinite;
-}
-
-.ticker-item {
-font-family: ‘Share Tech Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.3em;
-color: var(–text-dim);
-text-transform: uppercase;
-padding: 0 40px;
-}
-
-.ticker-item span {
-color: var(–aurora-1);
-margin-right: 8px;
-}
-
-@keyframes ticker-scroll {
-from { transform: translateX(0); }
-to   { transform: translateX(-50%); }
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-nav { padding: 18px 20px; }
-.section { padding: 72px 20px; }
-.manifesto { padding: 72px 20px; }
-.bottom-cta { padding: 80px 20px; }
-footer { padding: 24px 20px; }
-.stats-bar { flex-wrap: wrap; }
-.stat-item { min-width: 50%; border-bottom: 1px solid rgba(0,255,229,0.1); }
-.input-wrap { flex-direction: column; }
-.cta-btn { width: 100%; padding: 14px; text-align: center; }
-.footer-links { display: none; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEONICS — Imagery Refined Beyond Limits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── DESIGN TOKENS ───────────────────────────────────────────── */
+    :root {
+      --aurora-1:    #00ffe5;
+      --aurora-2:    #7b2fff;
+      --aurora-3:    #ff2fd4;
+      --aurora-4:    #00ff85;
+      --aurora-5:    #ffe500;
+      --dark:        #020408;
+      --dark2:       #080d14;
+      --grid-color:  rgba(0, 255, 229, 0.07);
+      --scanline:    rgba(0, 255, 229, 0.03);
+      --text-main:   #e8f4ff;
+      --text-dim:    rgba(232, 244, 255, 0.5);
+      --glow-cyan:   0 0 20px rgba(0, 255, 229, 0.5),   0 0 60px rgba(0, 255, 229, 0.15);
+      --glow-purple: 0 0 20px rgba(123, 47, 255, 0.6),  0 0 60px rgba(123, 47, 255, 0.2);
+      --glow-pink:   0 0 20px rgba(255, 47, 212, 0.5),  0 0 60px rgba(255, 47, 212, 0.15);
+    }
+
+    /* ── RESET ───────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      margin:     0;
+      padding:    0;
+      box-sizing: border-box;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:  var(--dark);
+      color:       var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x:  hidden;
+      cursor:      crosshair;
+    }
+
+    /* ── SCANLINES ───────────────────────────────────────────────── */
+    body::after {
+      content:    '';
+      position:   fixed;
+      inset:      0;
+      background: repeating-linear-gradient(
+        0deg,
+        var(--scanline) 0px,
+        var(--scanline) 1px,
+        transparent     1px,
+        transparent     3px
+      );
+      pointer-events: none;
+      z-index:        9999;
+    }
+
+    /* ── AURORA BACKGROUND ───────────────────────────────────────── */
+    .aurora-bg {
+      position: fixed;
+      inset:    0;
+      z-index:  0;
+      overflow: hidden;
+    }
+
+    .aurora-blob {
+      position:      absolute;
+      border-radius: 50%;
+      filter:        blur(90px);
+      opacity:       0.18;
+      animation:     drift linear infinite;
+    }
+
+    .aurora-blob:nth-child(1) {
+      width:              700px;
+      height:             700px;
+      background:         radial-gradient(circle, var(--aurora-2), transparent 70%);
+      top:                -200px;
+      left:               -100px;
+      animation-duration: 22s;
+    }
+
+    .aurora-blob:nth-child(2) {
+      width:              600px;
+      height:             600px;
+      background:         radial-gradient(circle, var(--aurora-1), transparent 70%);
+      top:                30%;
+      right:              -150px;
+      animation-duration: 18s;
+      animation-delay:    -5s;
+    }
+
+    .aurora-blob:nth-child(3) {
+      width:              500px;
+      height:             500px;
+      background:         radial-gradient(circle, var(--aurora-3), transparent 70%);
+      bottom:             -100px;
+      left:               30%;
+      animation-duration: 25s;
+      animation-delay:    -10s;
+    }
+
+    .aurora-blob:nth-child(4) {
+      width:              400px;
+      height:             400px;
+      background:         radial-gradient(circle, var(--aurora-4), transparent 70%);
+      top:                60%;
+      left:               -80px;
+      animation-duration: 20s;
+      animation-delay:    -3s;
+    }
+
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      33%  { transform: translate(60px, -80px) scale(1.1); }
+      66%  { transform: translate(-40px, 60px) scale(0.95); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* ── GRID OVERLAY ────────────────────────────────────────────── */
+    .grid-overlay {
+      position: fixed;
+      inset:    0;
+      z-index:  1;
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image:      radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+      pointer-events:  none;
+    }
+
+    /* ── CONTENT LAYER ───────────────────────────────────────────── */
+    .content {
+      position: relative;
+      z-index:  10;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────────────── */
+    nav {
+      display:         flex;
+      justify-content: space-between;
+      align-items:     center;
+      padding:         24px 48px;
+      border-bottom:   1px solid rgba(0, 255, 229, 0.1);
+      backdrop-filter: blur(8px);
+      background:      rgba(2, 4, 8, 0.5);
+      position:        sticky;
+      top:             0;
+      z-index:         100;
+    }
+
+    .logo {
+      font-family:     'Orbitron', monospace;
+      font-weight:     900;
+      font-size:       1.4rem;
+      letter-spacing:  0.2em;
+      color:           var(--aurora-1);
+      text-shadow:     var(--glow-cyan);
+      text-decoration: none;
+      position:        relative;
+    }
+
+    .logo span {
+      color:       var(--aurora-3);
+      text-shadow: var(--glow-pink);
+    }
+
+    .nav-badge {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.65rem;
+      letter-spacing: 0.25em;
+      color:          var(--aurora-5);
+      border:         1px solid rgba(255, 229, 0, 0.4);
+      padding:        4px 12px;
+      text-transform: uppercase;
+      background:     rgba(255, 229, 0, 0.05);
+      animation:      badge-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes badge-pulse {
+      0%, 100% { opacity: 1;   box-shadow: 0 0 8px rgba(255, 229, 0, 0.3); }
+      50%       { opacity: 0.6; box-shadow: none; }
+    }
+
+    /* ── HERO ────────────────────────────────────────────────────── */
+    .hero {
+      min-height:      92vh;
+      display:         flex;
+      flex-direction:  column;
+      justify-content: center;
+      align-items:     center;
+      text-align:      center;
+      padding:         60px 24px 80px;
+      position:        relative;
+    }
+
+    .hero-eyebrow {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.7rem;
+      letter-spacing: 0.4em;
+      color:          var(--aurora-1);
+      text-transform: uppercase;
+      margin-bottom:  28px;
+      opacity:        0;
+      animation:      fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family:    'Orbitron', monospace;
+      font-size:      clamp(2.6rem, 9vw, 7rem);
+      font-weight:    900;
+      line-height:    0.92;
+      letter-spacing: -0.02em;
+      opacity:        0;
+      animation:      fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-title .line-static {
+      display:     block;
+      color:       var(--text-main);
+      text-shadow: 0 0 40px rgba(232, 244, 255, 0.12);
+    }
+
+    .hero-title .line-gradient {
+      display:    block;
+      background: linear-gradient(90deg, var(--aurora-1), var(--aurora-2), var(--aurora-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip:         text;
+      animation:               hue-shift 6s linear infinite;
+    }
+
+    @keyframes hue-shift {
+      0%   { filter: drop-shadow(0 0 30px rgba(0,   255, 229, 0.4)) hue-rotate(0deg); }
+      50%  { filter: drop-shadow(0 0 50px rgba(255,  47, 212, 0.5)) hue-rotate(30deg); }
+      100% { filter: drop-shadow(0 0 30px rgba(0,   255, 229, 0.4)) hue-rotate(0deg); }
+    }
+
+    .hero-sub {
+      font-family:    'Rajdhani', sans-serif;
+      font-size:      clamp(1rem, 2.5vw, 1.3rem);
+      font-weight:    300;
+      color:          var(--text-dim);
+      max-width:      580px;
+      line-height:    1.75;
+      margin-top:     32px;
+      letter-spacing: 0.03em;
+      opacity:        0;
+      animation:      fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    /* ── EMAIL FORM ──────────────────────────────────────────────── */
+    .email-section {
+      display:        flex;
+      flex-direction: column;
+      align-items:    center;
+      gap:            14px;
+      width:          100%;
+      max-width:      480px;
+      margin-top:     48px;
+      opacity:        0;
+      animation:      fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .input-wrap {
+      display:         flex;
+      width:           100%;
+      border:          1px solid rgba(0, 255, 229, 0.3);
+      background:      rgba(0, 255, 229, 0.04);
+      backdrop-filter: blur(8px);
+      transition:      border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-wrap:focus-within {
+      border-color: var(--aurora-1);
+      box-shadow:   var(--glow-cyan);
+    }
+
+    .email-input {
+      flex:           1;
+      background:     transparent;
+      border:         none;
+      outline:        none;
+      padding:        14px 20px;
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.85rem;
+      color:          var(--text-main);
+      letter-spacing: 0.05em;
+    }
+
+    .email-input::placeholder { color: rgba(232, 244, 255, 0.3); }
+
+    .cta-btn {
+      padding:        14px 28px;
+      background:     linear-gradient(135deg, var(--aurora-1), var(--aurora-2));
+      border:         none;
+      font-family:    'Orbitron', monospace;
+      font-size:      0.65rem;
+      font-weight:    700;
+      letter-spacing: 0.2em;
+      color:          #000;
+      cursor:         pointer;
+      text-transform: uppercase;
+      white-space:    nowrap;
+      transition:     filter 0.3s, transform 0.15s;
+    }
+
+    .cta-btn:hover {
+      filter:    brightness(1.2) saturate(1.3);
+      transform: scale(1.02);
+    }
+
+    .form-note {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.65rem;
+      color:          var(--text-dim);
+      letter-spacing: 0.15em;
+    }
+
+    /* ── SCROLL HINT ─────────────────────────────────────────────── */
+    .scroll-hint {
+      position:       absolute;
+      bottom:         32px;
+      left:           50%;
+      transform:      translateX(-50%);
+      display:        flex;
+      flex-direction: column;
+      align-items:    center;
+      gap:            8px;
+      opacity:        0;
+      animation:      fadeUp 0.8s ease forwards 1.4s;
+    }
+
+    .scroll-hint span {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.6rem;
+      letter-spacing: 0.3em;
+      color:          var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width:      1px;
+      height:     40px;
+      background: linear-gradient(to bottom, var(--aurora-1), transparent);
+      animation:  scroll-drop 2s ease-in-out infinite;
+    }
+
+    @keyframes scroll-drop {
+      0%, 100% { transform: scaleY(1);   opacity: 1; }
+      50%       { transform: scaleY(0.4); opacity: 0.3; }
+    }
+
+    /* ── TICKER ──────────────────────────────────────────────────── */
+    .ticker {
+      overflow:      hidden;
+      border-top:    1px solid rgba(0, 255, 229, 0.12);
+      border-bottom: 1px solid rgba(0, 255, 229, 0.12);
+      background:    rgba(0, 0, 0, 0.4);
+      padding:       10px 0;
+      white-space:   nowrap;
+    }
+
+    .ticker-inner {
+      display:   inline-flex;
+      animation: ticker-scroll 30s linear infinite;
+    }
+
+    .ticker-item {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.65rem;
+      letter-spacing: 0.3em;
+      color:          var(--text-dim);
+      text-transform: uppercase;
+      padding:        0 40px;
+    }
+
+    .ticker-item span {
+      color:        var(--aurora-1);
+      margin-right: 8px;
+    }
+
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── STATS BAR ───────────────────────────────────────────────── */
+    .stats-bar {
+      display:         flex;
+      justify-content: center;
+      border-top:      1px solid rgba(0, 255, 229, 0.1);
+      border-bottom:   1px solid rgba(0, 255, 229, 0.1);
+      background:      rgba(2, 4, 8, 0.7);
+      backdrop-filter: blur(8px);
+      overflow:        hidden;
+    }
+
+    .stat-item {
+      flex:          1;
+      max-width:     240px;
+      padding:       32px 20px;
+      text-align:    center;
+      border-right:  1px solid rgba(0, 255, 229, 0.1);
+      transition:    background 0.3s;
+    }
+
+    .stat-item:last-child { border-right: none; }
+    .stat-item:hover      { background: rgba(0, 255, 229, 0.04); }
+
+    .stat-val {
+      display:     block;
+      font-family: 'Orbitron', monospace;
+      font-size:   clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 900;
+      color:       var(--aurora-1);
+      text-shadow: var(--glow-cyan);
+      line-height: 1;
+    }
+
+    .stat-label {
+      display:        block;
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.6rem;
+      letter-spacing: 0.25em;
+      color:          var(--text-dim);
+      text-transform: uppercase;
+      margin-top:     8px;
+    }
+
+    /* ── SECTIONS ────────────────────────────────────────────────── */
+    .section {
+      padding:   100px 48px;
+      max-width: 1200px;
+      margin:    0 auto;
+    }
+
+    .section-label {
+      display:        flex;
+      align-items:    center;
+      gap:            12px;
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.65rem;
+      letter-spacing: 0.45em;
+      color:          var(--aurora-3);
+      text-transform: uppercase;
+      margin-bottom:  16px;
+    }
+
+    .section-label::before {
+      content:    '';
+      display:    block;
+      width:      32px;
+      height:     1px;
+      background: var(--aurora-3);
+      box-shadow: 0 0 8px var(--aurora-3);
+    }
+
+    .section-title {
+      font-family:   'Orbitron', monospace;
+      font-size:     clamp(1.6rem, 4vw, 2.8rem);
+      font-weight:   700;
+      line-height:   1.15;
+      max-width:     600px;
+      margin-bottom: 60px;
+    }
+
+    /* ── FEATURES GRID ───────────────────────────────────────────── */
+    .features-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap:                   1px;
+      background:            rgba(0, 255, 229, 0.08);
+      border:                1px solid rgba(0, 255, 229, 0.08);
+    }
+
+    .feature-card {
+      position:   relative;
+      background: var(--dark2);
+      padding:    36px 32px;
+      overflow:   hidden;
+      transition: background 0.4s;
+    }
+
+    .feature-card::before {
+      content:    '';
+      position:   absolute;
+      top:        0;
+      left:       0;
+      width:      100%;
+      height:     2px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--aurora-1)), transparent);
+      transform:  scaleX(0);
+      transition: transform 0.4s;
+    }
+
+    .feature-card:hover::before { transform: scaleX(1); }
+    .feature-card:hover         { background: rgba(0, 255, 229, 0.03); }
+
+    .feature-card:nth-child(1) { --card-accent: var(--aurora-1); }
+    .feature-card:nth-child(2) { --card-accent: var(--aurora-2); }
+    .feature-card:nth-child(3) { --card-accent: var(--aurora-3); }
+    .feature-card:nth-child(4) { --card-accent: var(--aurora-4); }
+    .feature-card:nth-child(5) { --card-accent: var(--aurora-5); }
+    .feature-card:nth-child(6) { --card-accent: var(--aurora-1); }
+
+    .feature-icon {
+      display:       block;
+      font-size:     1.6rem;
+      margin-bottom: 20px;
+      filter:        drop-shadow(0 0 8px var(--card-accent, var(--aurora-1)));
+    }
+
+    .feature-title {
+      font-family:    'Orbitron', monospace;
+      font-size:      0.82rem;
+      font-weight:    700;
+      letter-spacing: 0.1em;
+      color:          var(--text-main);
+      text-transform: uppercase;
+      margin-bottom:  12px;
+    }
+
+    .feature-desc {
+      font-size:      0.95rem;
+      font-weight:    300;
+      color:          var(--text-dim);
+      line-height:    1.75;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── MANIFESTO ───────────────────────────────────────────────── */
+    .manifesto {
+      padding:       100px 48px;
+      background:    linear-gradient(180deg, rgba(123, 47, 255, 0.05) 0%, transparent 100%);
+      border-top:    1px solid rgba(0, 255, 229, 0.08);
+      border-bottom: 1px solid rgba(0, 255, 229, 0.08);
+    }
+
+    .manifesto-inner {
+      max-width:  900px;
+      margin:     0 auto;
+      text-align: center;
+    }
+
+    .manifesto-quote {
+      font-family:    'Orbitron', monospace;
+      font-size:      clamp(1.2rem, 3.5vw, 2.2rem);
+      font-weight:    400;
+      line-height:    1.55;
+      color:          var(--text-main);
+      letter-spacing: 0.04em;
+    }
+
+    .manifesto-quote em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--aurora-1), var(--aurora-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip:         text;
+    }
+
+    .manifesto-divider {
+      width:      80px;
+      height:     1px;
+      background: linear-gradient(90deg, transparent, var(--aurora-2), transparent);
+      margin:     40px auto;
+    }
+
+    .manifesto-body {
+      font-size:      1.05rem;
+      font-weight:    300;
+      color:          var(--text-dim);
+      line-height:    1.9;
+      max-width:      680px;
+      margin:         0 auto;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── PROCESS ─────────────────────────────────────────────────── */
+    .process-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap:                   32px;
+      margin-top:            60px;
+    }
+
+    .process-step {
+      position:    relative;
+      padding:     28px 24px 28px 48px;
+      border-left: 2px solid rgba(0, 255, 229, 0.2);
+      transition:  border-color 0.3s;
+    }
+
+    .process-step:hover { border-color: var(--aurora-1); }
+
+    .step-num {
+      position:        absolute;
+      left:            -14px;
+      top:             24px;
+      width:           26px;
+      height:          26px;
+      background:      var(--dark);
+      border:          1px solid var(--aurora-1);
+      color:           var(--aurora-1);
+      font-family:     'Share Tech Mono', monospace;
+      font-size:       0.65rem;
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      text-shadow:     var(--glow-cyan);
+      box-shadow:      var(--glow-cyan);
+    }
+
+    .step-title {
+      font-family:    'Orbitron', monospace;
+      font-size:      0.75rem;
+      font-weight:    700;
+      letter-spacing: 0.12em;
+      color:          var(--text-main);
+      text-transform: uppercase;
+      margin-bottom:  8px;
+    }
+
+    .step-desc {
+      font-size:   0.9rem;
+      font-weight: 300;
+      color:       var(--text-dim);
+      line-height: 1.75;
+    }
+
+    /* ── BOTTOM CTA ──────────────────────────────────────────────── */
+    .bottom-cta {
+      padding:    120px 24px;
+      text-align: center;
+    }
+
+    .bottom-cta-title {
+      font-family:   'Orbitron', monospace;
+      font-size:     clamp(2rem, 6vw, 4.5rem);
+      font-weight:   900;
+      line-height:   1.05;
+      margin-bottom: 24px;
+    }
+
+    .bottom-cta-title .accent {
+      color:       var(--aurora-1);
+      text-shadow: var(--glow-cyan);
+    }
+
+    .bottom-cta-sub {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.65rem;
+      letter-spacing: 0.3em;
+      color:          var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom:  48px;
+    }
+
+    /* ── COUNTDOWN ───────────────────────────────────────────────── */
+    .counter-wrap {
+      display:         flex;
+      justify-content: center;
+      align-items:     center;
+      gap:             6px;
+      margin:          40px auto 12px;
+    }
+
+    .counter-box {
+      min-width:   56px;
+      padding:     10px 14px;
+      background:  rgba(0, 255, 229, 0.06);
+      border:      1px solid rgba(0, 255, 229, 0.2);
+      font-family: 'Orbitron', monospace;
+      font-size:   1.6rem;
+      color:       var(--aurora-1);
+      text-shadow: var(--glow-cyan);
+      text-align:  center;
+      line-height: 1;
+    }
+
+    .counter-sep {
+      font-family: 'Orbitron', monospace;
+      font-size:   1.4rem;
+      color:       var(--aurora-3);
+    }
+
+    .counter-labels {
+      display:         flex;
+      justify-content: center;
+      align-items:     center;
+      gap:             6px;
+      margin-bottom:   48px;
+    }
+
+    .counter-labels span {
+      min-width:      56px;
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.55rem;
+      letter-spacing: 0.25em;
+      color:          var(--text-dim);
+      text-align:     center;
+      text-transform: uppercase;
+    }
+
+    .counter-labels .sep-gap { min-width: 18px; }
+
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    footer {
+      display:         flex;
+      justify-content: space-between;
+      align-items:     center;
+      flex-wrap:       wrap;
+      gap:             16px;
+      padding:         32px 48px;
+      border-top:      1px solid rgba(0, 255, 229, 0.1);
+      background:      rgba(2, 4, 8, 0.8);
+      backdrop-filter: blur(8px);
+    }
+
+    .footer-logo {
+      font-family:    'Orbitron', monospace;
+      font-size:      0.9rem;
+      font-weight:    900;
+      color:          var(--aurora-1);
+      letter-spacing: 0.2em;
+      text-shadow:    var(--glow-cyan);
+    }
+
+    .footer-copy {
+      font-family:    'Share Tech Mono', monospace;
+      font-size:      0.6rem;
+      letter-spacing: 0.2em;
+      color:          var(--text-dim);
+      text-align:     center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap:     24px;
+    }
+
+    .footer-links a {
+      font-family:     'Share Tech Mono', monospace;
+      font-size:       0.6rem;
+      letter-spacing:  0.2em;
+      color:           var(--text-dim);
+      text-decoration: none;
+      text-transform:  uppercase;
+      transition:      color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--aurora-1); }
+
+    /* ── ANIMATIONS ──────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity:    0;
+      transform:  translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity:   1;
+      transform: translateY(0);
+    }
+
+    /* ── LOGO GLITCH ─────────────────────────────────────────────── */
+    .logo:hover::before,
+    .logo:hover::after {
+      content:  'AEONICS';
+      position: absolute;
+      top:      0;
+      left:     0;
+      opacity:  0.7;
+    }
+
+    .logo:hover::before {
+      color:     var(--aurora-3);
+      animation: glitch-a 0.15s steps(2) infinite;
+      clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+    }
+
+    .logo:hover::after {
+      color:     var(--aurora-1);
+      animation: glitch-b 0.2s steps(2) infinite;
+      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    }
+
+    @keyframes glitch-a {
+      0%   { transform: translate(-3px, 0); }
+      100% { transform: translate(3px, 0); }
+    }
+
+    @keyframes glitch-b {
+      0%   { transform: translate(2px, 0); }
+      100% { transform: translate(-2px, 0); }
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav         { padding: 18px 20px; }
+      .section    { padding: 72px 20px; }
+      .manifesto  { padding: 72px 20px; }
+      .bottom-cta { padding: 80px 20px; }
+      footer      { padding: 24px 20px; }
+
+      .stats-bar  { flex-wrap: wrap; }
+      .stat-item  { min-width: 50%; border-bottom: 1px solid rgba(0, 255, 229, 0.1); }
+
+      .input-wrap { flex-direction: column; }
+      .cta-btn    { width: 100%; padding: 14px; text-align: center; }
+
+      .footer-links { display: none; }
+    }
+  </style>
 
 </head>
+
 <body>
 
-<!-- AURORA BACKGROUND -->
+  <!-- AURORA BACKGROUND ─────────────────────────────────────────── -->
 
-<div class="aurora-bg">
-  <div class="aurora-blob"></div>
-  <div class="aurora-blob"></div>
-  <div class="aurora-blob"></div>
-  <div class="aurora-blob"></div>
-</div>
-<div class="grid-overlay"></div>
+  <div class="aurora-bg">
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+    <div class="aurora-blob"></div>
+  </div>
 
-<div class="content">
+  <!-- GRID OVERLAY ─────────────────────────────────────────────── -->
 
-<!-- NAV -->
+  <div class="grid-overlay"></div>
 
+  <!-- MAIN CONTENT ─────────────────────────────────────────────── -->
+
+  <div class="content">
+
+```
+<!-- NAV ──────────────────────────────────────────────────────── -->
 <nav>
   <a class="logo" href="#">AE<span>ONICS</span></a>
-  <div class="nav-badge">// COMING SOON</div>
+  <div class="nav-badge">// Coming Soon</div>
 </nav>
 
-<!-- HERO -->
-
+<!-- HERO ─────────────────────────────────────────────────────── -->
 <section class="hero">
-  <p class="hero-eyebrow">// SUPER-REFINED IMAGE INTELLIGENCE BUILT ON Z-Image//</p>
+
+  <p class="hero-eyebrow">// Super-refined image intelligence — built on Z-Image</p>
+
   <h1 class="hero-title">
-    <span class="line1">IMAGERY-REDFINED-BEYOND-LIMITS</span>
-    <span class="line2"></span>
-    <span class="line1"></span>
+    <span class="line-static">IMAGERY</span>
+    <span class="line-gradient">REFINED</span>
+    <span class="line-static">BEYOND LIMITS</span>
   </h1>
+
   <p class="hero-sub">
-    Aeonics is a super-refined image generation model built on the Z-Image natively , fluent in over 200 distinct visual styles. Engineered for artists, product designers, and creative professionals who demand both aesthetic precision and photorealistic fidelity in today's image-saturated world.
+    Aeonics is a super-refined image generation model built natively on Z-Image —
+    fluent in over 200 distinct visual styles. Engineered for artists, product designers,
+    and creative professionals who demand both aesthetic precision and photorealistic
+    fidelity in today's image-saturated world.
   </p>
+
   <div class="email-section">
     <div class="input-wrap">
       <input class="email-input" type="email" placeholder="your@email.com" />
-      <button class="cta-btn" onclick="handleNotify()">Get Access</button>
+      <button class="cta-btn" data-label="Get Access" onclick="handleNotify(this)">
+        Get Access
+      </button>
     </div>
-    <p class="form-note">// Early access soon — We're delighted to have you</p>
+    <p class="form-note">// Early access coming soon — We're delighted to have you</p>
   </div>
+
   <div class="scroll-hint">
-    <span></span>
+    <span>Scroll</span>
     <div class="scroll-line"></div>
   </div>
+
 </section>
 
-<!-- TICKER -->
-
-<div class="ticker">
+<!-- TICKER ───────────────────────────────────────────────────── -->
+<div class="ticker" aria-hidden="true">
   <div class="ticker-inner">
     <span class="ticker-item"><span>◈</span> 200+ Native Visual Styles</span>
-    <span class="ticker-item"><span>◈</span> Aesthetics & Realism Guaranteed</span>
-    <span class="ticker-item"><span>◈</span> Artist & Designer Ready</span>
+    <span class="ticker-item"><span>◈</span> Aesthetics &amp; Realism Guaranteed</span>
+    <span class="ticker-item"><span>◈</span> Artist &amp; Designer Ready</span>
     <span class="ticker-item"><span>◈</span> Modern Safety Standards</span>
     <span class="ticker-item"><span>◈</span> Product Design Optimized</span>
     <span class="ticker-item"><span>◈</span> We Do The Heavy Lifting</span>
     <span class="ticker-item"><span>◈</span> 200+ Native Visual Styles</span>
-    <span class="ticker-item"><span>◈</span> Aesthetics & Realism Guaranteed</span>
-    <span class="ticker-item"><span>◈</span> Artist & Designer Ready</span>
+    <span class="ticker-item"><span>◈</span> Aesthetics &amp; Realism Guaranteed</span>
+    <span class="ticker-item"><span>◈</span> Artist &amp; Designer Ready</span>
     <span class="ticker-item"><span>◈</span> Modern Safety Standards</span>
     <span class="ticker-item"><span>◈</span> Product Design Optimized</span>
     <span class="ticker-item"><span>◈</span> We Do The Heavy Lifting</span>
   </div>
 </div>
 
-<!-- STATS -->
-
+<!-- STATS BAR ────────────────────────────────────────────────── -->
 <div class="stats-bar">
   <div class="stat-item">
     <span class="stat-val">200+</span>
@@ -866,95 +926,150 @@ footer { padding: 24px 20px; }
   </div>
 </div>
 
-<!-- FEATURES -->
-
+<!-- FEATURES ─────────────────────────────────────────────────── -->
 <section class="section reveal">
+
   <p class="section-label">Core Capability</p>
   <h2 class="section-title">A model that understands what beautiful means.</h2>
+
   <div class="features-grid">
+
     <div class="feature-card">
       <span class="feature-icon">🎨</span>
       <h3 class="feature-title">200+ Native Styles</h3>
-      <p class="feature-desc">From photorealism to editorial illustration, concept art to product render — Aeonics speaks every visual language natively, without style adapters or workarounds.</p>
+      <p class="feature-desc">
+        From photorealism to editorial illustration, concept art to product render —
+        Aeonics speaks every visual language natively, without style adapters or workarounds.
+      </p>
     </div>
+
     <div class="feature-card">
       <span class="feature-icon">✦</span>
       <h3 class="feature-title">Aesthetic Precision</h3>
-      <p class="feature-desc">Every output is evaluated against compositional, tonal, and stylistic benchmarks. Aeonics doesn't just generate — it curates.</p>
+      <p class="feature-desc">
+        Every output is evaluated against compositional, tonal, and stylistic benchmarks.
+        Aeonics doesn't just generate — it curates.
+      </p>
     </div>
+
     <div class="feature-card">
       <span class="feature-icon">📐</span>
       <h3 class="feature-title">Product Design Ready</h3>
-      <p class="feature-desc">Generate packaging visuals, product mockups, surface textures, and material studies with structural accuracy that holds up at production scale.</p>
+      <p class="feature-desc">
+        Generate packaging visuals, product mockups, surface textures, and material studies
+        with structural accuracy that holds up at production scale.
+      </p>
     </div>
+
     <div class="feature-card">
       <span class="feature-icon">🖼️</span>
       <h3 class="feature-title">Artist-Grade Output</h3>
-      <p class="feature-desc">Built for illustrators, concept artists, and visual directors. Aeonics respects your creative language and extends it — not replaces it.</p>
+      <p class="feature-desc">
+        Built for illustrators, concept artists, and visual directors. Aeonics respects
+        your creative language and extends it — not replaces it.
+      </p>
     </div>
+
     <div class="feature-card">
       <span class="feature-icon">🛡️</span>
       <h3 class="feature-title">Modern Safety System</h3>
-      <p class="feature-desc">A guideline-based moderation framework that's current, transparent, and built for the real internet — protecting creators and their audiences.</p>
+      <p class="feature-desc">
+        A guideline-based moderation framework that's current, transparent, and built
+        for the real internet — protecting creators and their audiences.
+      </p>
     </div>
+
     <div class="feature-card">
       <span class="feature-icon">⚙️</span>
       <h3 class="feature-title">We Do The Heavy Lifting</h3>
-      <p class="feature-desc">Infrastructure, inference optimization, and model upkeep are entirely on us. Your only job is to think creatively and bring your vision.</p>
+      <p class="feature-desc">
+        Infrastructure, inference optimization, and model upkeep are entirely on us.
+        Your only job is to think creatively and bring your vision.
+      </p>
     </div>
+
   </div>
 </section>
 
-<!-- MANIFESTO -->
-
+<!-- MANIFESTO ────────────────────────────────────────────────── -->
 <div class="manifesto reveal">
   <div class="manifesto-inner">
+
     <p class="manifesto-quote">
-      "The internet doesn't need more images.<br>It needs <em>better ones.</em>"
+      "The internet doesn't need more images.<br>
+      It needs <em>better ones.</em>"
     </p>
+
     <div class="manifesto-divider"></div>
+
     <p class="manifesto-body">
-      We built Aeonics because the visual web has a quality problem. Generation is fast. Quality is inconsistent. Safety is an afterthought. Aeonics is the answer to all three — a super-refined model that delivers aesthetic and photorealistic output at a standard your audience can feel, grounded in modern content guidelines that creative professionals can actually trust. We handle the complexity. You bring the vision.
+      We built Aeonics because the visual web has a quality problem. Generation is fast.
+      Quality is inconsistent. Safety is an afterthought. Aeonics is the answer to all
+      three — a super-refined model that delivers aesthetic and photorealistic output at
+      a standard your audience can feel, grounded in modern content guidelines that
+      creative professionals can actually trust. We handle the complexity. You bring the vision.
     </p>
+
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-
+<!-- HOW IT WORKS ─────────────────────────────────────────────── -->
 <section class="section reveal">
+
   <p class="section-label">How It Works</p>
   <h2 class="section-title">You think. We deliver. It's that simple.</h2>
+
   <div class="process-grid">
+
     <div class="process-step">
       <div class="step-num">01</div>
       <h4 class="step-title">Describe</h4>
-      <p class="step-desc">Tell Aeonics what you need. A product render, a concept illustration, a brand visual — in plain language, with as much or as little detail as you have.</p>
+      <p class="step-desc">
+        Tell Aeonics what you need. A product render, a concept illustration, a brand visual
+        — in plain language, with as much or as little detail as you have.
+      </p>
     </div>
+
     <div class="process-step">
       <div class="step-num">02</div>
       <h4 class="step-title">Select Style</h4>
-      <p class="step-desc">Choose from 200+ natively understood visual styles — or let Aeonics infer the right aesthetic from your intent. No manual tuning required.</p>
+      <p class="step-desc">
+        Choose from 200+ natively understood visual styles — or let Aeonics infer the right
+        aesthetic from your intent. No manual tuning required.
+      </p>
     </div>
+
     <div class="process-step">
       <div class="step-num">03</div>
       <h4 class="step-title">Generate</h4>
-      <p class="step-desc">Aeonics produces your image at full resolution with guaranteed aesthetic coherence, realistic detail, and structural integrity.</p>
+      <p class="step-desc">
+        Aeonics produces your image at full resolution with guaranteed aesthetic coherence,
+        realistic detail, and structural integrity.
+      </p>
     </div>
+
     <div class="process-step">
       <div class="step-num">04</div>
       <h4 class="step-title">Publish</h4>
-      <p class="step-desc">Output is production-ready for social, editorial, e-commerce, or portfolio use — meeting today's platform and professional quality standards.</p>
+      <p class="step-desc">
+        Output is production-ready for social, editorial, e-commerce, or portfolio use —
+        meeting today's platform and professional quality standards.
+      </p>
     </div>
+
   </div>
 </section>
 
-<!-- BOTTOM CTA -->
-
+<!-- BOTTOM CTA ───────────────────────────────────────────────── -->
 <section class="bottom-cta reveal">
+
   <h2 class="bottom-cta-title">
-    WE'RE DELIGHTED<br><span class="accent">TO HAVE YOU.</span>
+    WE'RE DELIGHTED<br>
+    <span class="accent">TO HAVE YOU.</span>
   </h2>
+
   <p class="bottom-cta-sub">// Aeonics early access — countdown to launch</p>
+
   <div class="counter-wrap" id="countdown">
     <div class="counter-box" id="cd-days">00</div>
     <span class="counter-sep">:</span>
@@ -964,91 +1079,119 @@ footer { padding: 24px 20px; }
     <span class="counter-sep">:</span>
     <div class="counter-box" id="cd-secs">00</div>
   </div>
-  <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;font-family:'Share Tech Mono',monospace;font-size:0.55rem;letter-spacing:0.25em;color:var(--text-dim);">
-    <span style="min-width:56px;text-align:center;">DAYS</span>
-    <span style="min-width:12px;"></span>
-    <span style="min-width:56px;text-align:center;">HRS</span>
-    <span style="min-width:12px;"></span>
-    <span style="min-width:56px;text-align:center;">MIN</span>
-    <span style="min-width:12px;"></span>
-    <span style="min-width:56px;text-align:center;">SEC</span>
+
+  <div class="counter-labels">
+    <span>Days</span>
+    <span class="sep-gap"></span>
+    <span>Hrs</span>
+    <span class="sep-gap"></span>
+    <span>Min</span>
+    <span class="sep-gap"></span>
+    <span>Sec</span>
   </div>
 
-  <div class="email-section" style="margin: 0 auto 0;">
+  <div class="email-section" style="margin: 0 auto;">
     <div class="input-wrap">
       <input class="email-input" type="email" placeholder="your@email.com" />
-      <button class="cta-btn" onclick="handleNotify()">Notify Me</button>
+      <button class="cta-btn" data-label="Notify Me" onclick="handleNotify(this)">
+        Notify Me
+      </button>
     </div>
   </div>
+
 </section>
 
-<!-- FOOTER -->
-
+<!-- FOOTER ───────────────────────────────────────────────────── -->
 <footer>
   <div class="footer-logo">AEONICS</div>
-  <p class="footer-copy">© 2025 AEONICS. QUALITY GUARANTEED. ALL SYSTEMS BY TEKTREY.</p>
+  <p class="footer-copy">© 2025 Aeonics. Quality Guaranteed. All systems by TekTrey.</p>
   <div class="footer-links">
     <a href="#">Privacy</a>
     <a href="#">Contact</a>
     <a href="#">API Docs</a>
   </div>
 </footer>
+```
 
-</div><!-- /content -->
+  </div><!-- /content -->
 
-<script>
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(r => io.observe(r));
+  <script>
+    /* ── Scroll reveal ─────────────────────────────────────────── */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
 
-  // Countdown — target 90 days from now
-  const target = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
-  function updateCountdown() {
-    const diff = target - Date.now();
-    if (diff <= 0) return;
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
-    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
-    document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
-    document.getElementById('cd-secs').textContent  = String(s).padStart(2,'0');
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  // Notify handler
-  function handleNotify() {
-    const inputs = document.querySelectorAll('.email-input');
-    let email = '';
-    inputs.forEach(i => { if (i.value) email = i.value; });
-    if (!email || !email.includes('@')) {
-      alert('Please enter a valid email address.');
-      return;
+    /* ── Countdown (90 days from load) ─────────────────────────── */
+    const launchTarget = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+
+    function updateCountdown() {
+      const diff = launchTarget - Date.now();
+      if (diff <= 0) return;
+
+      const days  = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins  = Math.floor((diff % 3600000)  / 60000);
+      const secs  = Math.floor((diff % 60000)    / 1000);
+
+      document.getElementById('cd-days').textContent  = String(days).padStart(2, '0');
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cd-mins').textContent  = String(mins).padStart(2, '0');
+      document.getElementById('cd-secs').textContent  = String(secs).padStart(2, '0');
     }
-    inputs.forEach(i => { i.value = ''; i.placeholder = '✓ You\'re on the list.'; });
-  }
 
-  // Custom cursor glow
-  const cursor = document.createElement('div');
-  cursor.style.cssText = `
-    position:fixed; width:6px; height:6px; border-radius:50%;
-    background:var(--aurora-1); pointer-events:none; z-index:99999;
-    box-shadow:0 0 12px var(--aurora-1),0 0 30px rgba(0,255,229,0.4);
-    transform:translate(-50%,-50%); transition:opacity 0.3s;
-  `;
-  document.body.appendChild(cursor);
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top  = e.clientY + 'px';
-  });
-</script>
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    /* ── Email notify handler ───────────────────────────────────── */
+    function handleNotify(btn) {
+      const input = btn.closest('.input-wrap').querySelector('.email-input');
+
+      if (!input.value || !input.value.includes('@')) {
+        input.focus();
+        return;
+      }
+
+      input.value       = '';
+      input.placeholder = "✓ You're on the list.";
+      btn.textContent   = 'Done ✓';
+      btn.style.background = 'linear-gradient(135deg, var(--aurora-4), var(--aurora-1))';
+
+      setTimeout(() => {
+        btn.textContent      = btn.dataset.label || 'Get Access';
+        btn.style.background = '';
+        input.placeholder    = 'your@email.com';
+      }, 4000);
+    }
+
+    /* ── Custom cursor glow ─────────────────────────────────────── */
+    const cursor = document.createElement('div');
+    Object.assign(cursor.style, {
+      position:     'fixed',
+      width:        '6px',
+      height:       '6px',
+      borderRadius: '50%',
+      background:   'var(--aurora-1)',
+      pointerEvents:'none',
+      zIndex:       '99999',
+      boxShadow:    '0 0 12px var(--aurora-1), 0 0 30px rgba(0,255,229,0.4)',
+      transform:    'translate(-50%, -50%)',
+      transition:   'opacity 0.3s'
+    });
+
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+  </script>
 
 </body>
 </html>
